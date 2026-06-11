@@ -1,0 +1,21 @@
+# generate via the files engine (HoconFilesPlugin only populates managedFiles)
+> managedFilesGenerate
+
+# rendered HOCON parses back to the configured tree, with no banner
+> checkRendered
+
+# the raw managedFiles entry coexists with the HOCON one (proves `++=`)
+> checkRawCoexists
+
+# freshly generated files pass the up-to-date check
+> managedFilesCheck
+
+# tamper with the rendered file...
+> mutate
+
+# ...and the check must fail
+-> managedFilesCheck
+
+# regenerating brings everything back up to date
+> managedFilesGenerate
+> managedFilesCheck

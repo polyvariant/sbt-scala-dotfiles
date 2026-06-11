@@ -23,6 +23,22 @@ pull_request_rules:
       add:
       - core
       remove: []
+- name: Label files PRs
+  conditions:
+  - files~=^files/
+  actions:
+    label:
+      add:
+      - files
+      remove: []
+- name: Label hocon PRs
+  conditions:
+  - files~=^hocon/
+  actions:
+    label:
+      add:
+      - hocon
+      remove: []
 - name: Label scalafix PRs
   conditions:
   - files~=^scalafix/

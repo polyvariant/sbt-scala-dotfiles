@@ -16,6 +16,8 @@
 
 package org.polyvariant.scaladotfiles.scalafmt
 
+import org.polyvariant.scaladotfiles.files.FileManager
+import org.polyvariant.scaladotfiles.files.ManagedFilesPlugin
 import org.scalafmt.sbt.ScalafmtPlugin
 import sbt.*
 
@@ -24,8 +26,8 @@ import Keys.*
 /** An "sbt-github-actions–like" way to configure scalafmt: declare the version and settings as sbt
   * keys, and have the build generate a `.scalafmt.conf` from them.
   *
-  * Unlike the Scalafix sibling, scalafmt is configured by a single file (no Compile/Test split),
-  * so these keys are project-scoped rather than per-configuration.
+  * Unlike the Scalafix sibling, scalafmt is configured by a single file (no Compile/Test split), so
+  * these keys are project-scoped rather than per-configuration.
   *
   * Enable explicitly: `.enablePlugins(ScalafmtConfigPlugin)`. Enabling the plugin means "I manage
   * `.scalafmt.conf` from the build here": the generated file is checked in and wired into
@@ -34,7 +36,7 @@ import Keys.*
 object ScalafmtConfigPlugin extends AutoPlugin {
 
   override def trigger: PluginTrigger = noTrigger
-  override def requires: Plugins = ScalafmtPlugin
+  override def requires: Plugins = ScalafmtPlugin && ManagedFilesPlugin
 
   import ScalafmtPlugin.autoImport.scalafmtConfig
 
@@ -83,7 +85,7 @@ object ScalafmtConfigPlugin extends AutoPlugin {
             settings = scalafmtConfiguredSettings.value,
           )
         )
-        IO.write(file, contents)
+        FileManager.generate(Map(file -> contents), IO.write(_, _))
         streams.value.log.info(s"[scalafmtConfiguredGenerate] wrote $file")
         file
       },
@@ -96,12 +98,7 @@ object ScalafmtConfigPlugin extends AutoPlugin {
             settings = scalafmtConfiguredSettings.value,
           )
         )
-        val actual =
-          if (file.isFile)
-            IO.read(file)
-          else
-            ""
-        if (actual != expected)
+        if (FileManager.check(Map(file -> expected), IO.read(_), _.isFile).nonEmpty)
           sys.error(
             s"[scalafmtConfiguredCheck] $file is out of date — run scalafmtConfiguredGenerate"
           )

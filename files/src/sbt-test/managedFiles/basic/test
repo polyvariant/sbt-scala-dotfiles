@@ -1,0 +1,26 @@
+# generate all managed files
+> managedFilesGenerate
+
+# files exist with exact content and no banner
+> checkExactNoBanner
+
+# freshly generated files pass the up-to-date check
+> managedFilesCheck
+
+# tamper with one file...
+> mutate
+
+# ...and the check must fail
+-> managedFilesCheck
+
+# regenerating brings everything back up to date
+> managedFilesGenerate
+> managedFilesCheck
+
+# a missing file must also count as out of date
+> deleteOne
+-> managedFilesCheck
+
+# regenerating recreates it
+> managedFilesGenerate
+> managedFilesCheck

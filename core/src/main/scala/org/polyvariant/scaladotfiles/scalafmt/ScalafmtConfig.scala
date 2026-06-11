@@ -41,7 +41,11 @@ object ScalafmtConfig {
     * meant to be checked in, so this warns readers not to edit it by hand.
     */
   val header: String =
-    HoconConfig.banner("sbt-scala-dotfiles-scalafmt", "scalafmtConfigured*", "scalafmtConfiguredGenerate")
+    HoconConfig.banner(
+      "sbt-scala-dotfiles-scalafmt",
+      "scalafmtConfigured*",
+      "scalafmtConfiguredGenerate",
+    )
 
   /** Render the config to the textual contents of a `.scalafmt.conf` file, including the [[header]]
     * banner.

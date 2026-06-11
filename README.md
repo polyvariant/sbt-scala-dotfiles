@@ -2,17 +2,22 @@
 
 An ["sbt-github-actions"](https://github.com/sbt/sbt-github-actions)-like way to configure your
 Scala tooling dotfiles: declare your config as typed sbt keys and have the build **generate** the
-checked-in file. Two independent plugins live here:
+checked-in file. Four plugins live here, layered from specific to fully general — install whichever
+fits:
 
 - **`sbt-scala-dotfiles-scalafix`** — generate `.scalafix.conf` for
   [Scalafix](https://scalacenter.github.io/scalafix/), including a separate file per configuration
   so `Test` can run a more relaxed rule set than `Compile`.
 - **`sbt-scala-dotfiles-scalafmt`** — generate `.scalafmt.conf` for
   [scalafmt](https://scalameta.org/scalafmt/).
+- **`sbt-scala-dotfiles-hocon`** — generate **any** HOCON file(s) from typed value trees. The two
+  tool plugins above are specializations of this one.
+- **`sbt-scala-dotfiles-files`** — the most general: maintain **any** files at all, as
+  `target -> exact content`. The engine the others are built on.
 
-Both share a small HOCON-rendering `core` and wire the generated file into the upstream plugin
-(`sbt-scalafix` / `sbt-scalafmt`), so the IDE and the CLI still see a real checked-in config.
-Install whichever you need.
+They all share a small HOCON-rendering `core` and the same generate/check engine. The two tool
+plugins additionally wire the generated file into the upstream plugin (`sbt-scalafix` /
+`sbt-scalafmt`), so the IDE and the CLI still see a real checked-in config.
 
 > **Status: playground.** This is an experiment that sits on top of
 > [`sbt-scalafix`](https://github.com/scalacenter/sbt-scalafix) /
@@ -31,6 +36,8 @@ Install whichever you need.
   - [How it works](#how-it-works)
   - [Keeping the generated file fresh in CI](#keeping-the-generated-file-fresh-in-ci)
 - [scalafmt: sbt-scala-dotfiles-scalafmt](#scalafmt-sbt-scala-dotfiles-scalafmt)
+- [Any HOCON file: sbt-scala-dotfiles-hocon](#any-hocon-file-sbt-scala-dotfiles-hocon)
+- [Any file: sbt-scala-dotfiles-files](#any-file-sbt-scala-dotfiles-files)
 - [Limitations](#limitations)
 
 ## Scalafix: sbt-scala-dotfiles-scalafix
@@ -247,6 +254,74 @@ with the `sbt-scalafmt` this plugin builds against (`3.10.0`); override it to pi
 Enabling `ScalafmtConfigPlugin` means "I manage `.scalafmt.conf` from the build here": it always
 points `sbt-scalafmt`'s `scalafmtConfig` at the generated file, so `sbt scalafmtAll` /
 `scalafmtCheckAll` and your editor pick it up.
+
+## Any HOCON file: sbt-scala-dotfiles-hocon
+
+The scalafix and scalafmt plugins are specializations of a general HOCON generator. If you have
+**other** HOCON files to keep in sync with your build, use `sbt-scala-dotfiles-hocon` directly:
+declare `target file -> value tree` and the build renders each tree to HOCON and maintains it.
+
+It has no upstream tool to wire into (and adds no banner — the rendered HOCON is the whole file),
+so unlike the tool plugins, you drive the generic [`managedFiles*` tasks](#any-file-sbt-scala-dotfiles-files)
+to generate and check.
+
+In `project/plugins.sbt`:
+
+```scala
+addSbtPlugin("org.polyvariant" % "sbt-scala-dotfiles-hocon" % version)
+```
+
+```scala
+lazy val myProject = project
+  .enablePlugins(HoconFilesPlugin)
+  .settings(
+    hoconFiles := Map(
+      baseDirectory.value / "app.conf" -> Map(
+        "maxColumn" -> 100,
+        "runner" -> Map("dialect" -> "scala213"),
+        "rules" -> Seq("A", "B"),
+      )
+    ),
+  )
+```
+
+```sh
+sbt managedFilesGenerate   # writes every file in hoconFiles (+ any raw managedFiles entries)
+sbt managedFilesCheck      # fails if any is out of date (run this in CI)
+```
+
+`hoconFiles` value trees take the same shapes as the tool plugins' settings maps (`String`,
+`Boolean`, numbers, `null`, `Seq[Any]`, nested `Map[String, Any]`). Entries are added to
+`managedFiles`, so you can mix HOCON files and raw files (see below) in one project.
+
+## Any file: sbt-scala-dotfiles-files
+
+The most general plugin: maintain **any** files, as `target -> exact content` (written verbatim —
+no banner, no transformation). This is the engine every other plugin is built on; reach for it when
+the file isn't HOCON.
+
+In `project/plugins.sbt`:
+
+```scala
+addSbtPlugin("org.polyvariant" % "sbt-scala-dotfiles-files" % version)
+```
+
+```scala
+lazy val myProject = project
+  .enablePlugins(ManagedFilesPlugin)
+  .settings(
+    managedFiles := Map(
+      baseDirectory.value / ".gitignore" -> "target/\n.bsp/\n",
+      baseDirectory.value / "sub" / "VERSION" -> version.value,
+    ),
+  )
+```
+
+| Key                    | Description                                                                  |
+| ---------------------- | ---------------------------------------------------------------------------- |
+| `managedFiles`         | Files to maintain, as target path -> exact content (verbatim, no banner).    |
+| `managedFilesGenerate` | Write every managed file.                                                    |
+| `managedFilesCheck`    | Fail if any managed file is out of date — a missing file counts (run in CI). |
 
 ## Limitations
 

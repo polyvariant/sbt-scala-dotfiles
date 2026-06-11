@@ -16,6 +16,8 @@
 
 package org.polyvariant.scaladotfiles.scalafix
 
+import org.polyvariant.scaladotfiles.files.FileManager
+import org.polyvariant.scaladotfiles.files.ManagedFilesPlugin
 import sbt.*
 import scalafix.sbt.ScalafixPlugin
 
@@ -32,7 +34,7 @@ import Keys.*
 object ScalafixConfigPlugin extends AutoPlugin {
 
   override def trigger: PluginTrigger = noTrigger
-  override def requires: Plugins = ScalafixPlugin
+  override def requires: Plugins = ScalafixPlugin && ManagedFilesPlugin
 
   import ScalafixPlugin.autoImport.scalafixConfig
 
@@ -94,7 +96,7 @@ object ScalafixConfigPlugin extends AutoPlugin {
               settings = scalafixConfiguredSettings.value,
             )
           )
-          IO.write(file, contents)
+          FileManager.generate(Map(file -> contents), IO.write(_, _))
           streams.value.log.info(s"[scalafixConfiguredGenerate] (${config.name}) wrote $file")
           file
         },
@@ -107,12 +109,7 @@ object ScalafixConfigPlugin extends AutoPlugin {
               settings = scalafixConfiguredSettings.value,
             )
           )
-          val actual =
-            if (file.isFile)
-              IO.read(file)
-            else
-              ""
-          if (actual != expected)
+          if (FileManager.check(Map(file -> expected), IO.read(_), _.isFile).nonEmpty)
             sys.error(
               s"[scalafixConfiguredCheck] (${config.name}) $file is out of date — " +
                 s"run scalafixConfiguredGenerate"

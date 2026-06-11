@@ -27,9 +27,14 @@ ThisBuild / tlFatalWarnings := false
 
 ThisBuild / mergifyStewardConfig ~= (_.map(_.withMergeMinors(true)))
 
-// Run both sbt plugins' scripted tests in CI, after the normal build.
+// Run every sbt plugin's scripted tests in CI, after the normal build.
 ThisBuild / githubWorkflowBuildPostamble += WorkflowStep.Sbt(
-  List("scalafixPlugin/scripted", "scalafmtPlugin/scripted"),
+  List(
+    "filesPlugin/scripted",
+    "hoconPlugin/scripted",
+    "scalafixPlugin/scripted",
+    "scalafmtPlugin/scripted",
+  ),
   name = Some("Scripted tests"),
 )
 
@@ -43,9 +48,46 @@ lazy val core = project
     mimaPreviousArtifacts := Set.empty,
   )
 
+// The most general plugin: maintain any files. The base every other plugin builds on.
+lazy val filesPlugin = project
+  .in(file("files"))
+  .dependsOn(core)
+  .settings(
+    name := "sbt-scala-dotfiles-files",
+    libraryDependencies ++= Seq(
+      "org.scalameta" %% "munit" % "1.3.2" % Test
+    ),
+    pluginCrossBuild / sbtVersion := "1.9.8",
+    scriptedLaunchOpts :=
+      scriptedLaunchOpts.value ++
+        Seq("-Xmx1024M", "-Dplugin.version=" + version.value),
+    scriptedBufferLog := false,
+    mimaPreviousArtifacts := Set.empty,
+  )
+  .enablePlugins(SbtPlugin)
+
+// Maintain any HOCON files, on top of the generic files engine.
+lazy val hoconPlugin = project
+  .in(file("hocon"))
+  .dependsOn(core, filesPlugin)
+  .settings(
+    name := "sbt-scala-dotfiles-hocon",
+    libraryDependencies ++= Seq(
+      "org.scalameta" %% "munit" % "1.3.2" % Test
+    ),
+    pluginCrossBuild / sbtVersion := "1.9.8",
+    scriptedLaunchOpts :=
+      scriptedLaunchOpts.value ++
+        Seq("-Xmx1024M", "-Dplugin.version=" + version.value),
+    scriptedBufferLog := false,
+    mimaPreviousArtifacts := Set.empty,
+  )
+  .enablePlugins(SbtPlugin)
+
 lazy val scalafixPlugin = project
   .in(file("scalafix"))
-  .dependsOn(core)
+  // dependsOn filesPlugin (not just core) so `requires` can name ManagedFilesPlugin.
+  .dependsOn(core, filesPlugin)
   .settings(
     name := "sbt-scala-dotfiles-scalafix",
     libraryDependencies ++= Seq(
@@ -63,7 +105,7 @@ lazy val scalafixPlugin = project
 
 lazy val scalafmtPlugin = project
   .in(file("scalafmt"))
-  .dependsOn(core)
+  .dependsOn(core, filesPlugin)
   .settings(
     name := "sbt-scala-dotfiles-scalafmt",
     libraryDependencies ++= Seq(
@@ -81,5 +123,5 @@ lazy val scalafmtPlugin = project
 
 lazy val root = project
   .in(file("."))
-  .aggregate(core, scalafixPlugin, scalafmtPlugin)
+  .aggregate(core, filesPlugin, hoconPlugin, scalafixPlugin, scalafmtPlugin)
   .enablePlugins(NoPublishPlugin)

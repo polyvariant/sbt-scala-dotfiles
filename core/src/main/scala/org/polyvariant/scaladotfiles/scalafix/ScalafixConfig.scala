@@ -37,7 +37,11 @@ object ScalafixConfig {
     * to edit it by hand.
     */
   val header: String =
-    HoconConfig.banner("sbt-scala-dotfiles-scalafix", "scalafixConfigured*", "scalafixConfiguredGenerate")
+    HoconConfig.banner(
+      "sbt-scala-dotfiles-scalafix",
+      "scalafixConfigured*",
+      "scalafixConfiguredGenerate",
+    )
 
   import HoconConfig.renderValue
 
