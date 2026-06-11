@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.polyvariant.scalafixconfig
+package org.polyvariant.scaladotfiles.scalafix
 
 import sbt.*
 import scalafix.sbt.ScalafixPlugin

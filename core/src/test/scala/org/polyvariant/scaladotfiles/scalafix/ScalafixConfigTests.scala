@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.polyvariant.scalafixconfig
+package org.polyvariant.scaladotfiles.scalafix
 
 import com.typesafe.config.ConfigFactory
 
@@ -66,7 +66,7 @@ class ScalafixConfigTests extends munit.FunSuite {
   test("render includes the banner header pointing at the plugin") {
     val out = ScalafixConfig.render(sample)
     assert(out.startsWith(ScalafixConfig.header), s"missing header in:\n$out")
-    assert(out.contains("sbt-scalafix-config plugin"))
+    assert(out.contains("sbt-scala-dotfiles-scalafix plugin"))
   }
 
   test("rendered output parses back to an equivalent structure (round-trip)") {

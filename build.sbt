@@ -27,15 +27,15 @@ ThisBuild / tlFatalWarnings := false
 
 ThisBuild / mergifyStewardConfig ~= (_.map(_.withMergeMinors(true)))
 
-// Run the sbt plugin's scripted tests in CI, after the normal build.
+// Run both sbt plugins' scripted tests in CI, after the normal build.
 ThisBuild / githubWorkflowBuildPostamble += WorkflowStep.Sbt(
-  List("sbtPlugin/scripted"),
+  List("scalafixPlugin/scripted", "scalafmtPlugin/scripted"),
   name = Some("Scripted tests"),
 )
 
 lazy val core = project
   .settings(
-    name := "scalafix-config-core",
+    name := "scala-dotfiles-core",
     libraryDependencies ++= Seq(
       "com.typesafe" % "config" % "1.4.3",
       "org.scalameta" %% "munit" % "1.3.2" % Test,
@@ -43,10 +43,11 @@ lazy val core = project
     mimaPreviousArtifacts := Set.empty,
   )
 
-lazy val sbtPlugin = project
+lazy val scalafixPlugin = project
+  .in(file("scalafix"))
   .dependsOn(core)
   .settings(
-    name := "sbt-scalafix-config",
+    name := "sbt-scala-dotfiles-scalafix",
     libraryDependencies ++= Seq(
       "org.scalameta" %% "munit" % "1.3.2" % Test
     ),
@@ -60,7 +61,25 @@ lazy val sbtPlugin = project
   )
   .enablePlugins(SbtPlugin)
 
+lazy val scalafmtPlugin = project
+  .in(file("scalafmt"))
+  .dependsOn(core)
+  .settings(
+    name := "sbt-scala-dotfiles-scalafmt",
+    libraryDependencies ++= Seq(
+      "org.scalameta" %% "munit" % "1.3.2" % Test
+    ),
+    addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.5.6"),
+    pluginCrossBuild / sbtVersion := "1.9.8",
+    scriptedLaunchOpts :=
+      scriptedLaunchOpts.value ++
+        Seq("-Xmx1024M", "-Dplugin.version=" + version.value),
+    scriptedBufferLog := false,
+    mimaPreviousArtifacts := Set.empty,
+  )
+  .enablePlugins(SbtPlugin)
+
 lazy val root = project
   .in(file("."))
-  .aggregate(core, sbtPlugin)
+  .aggregate(core, scalafixPlugin, scalafmtPlugin)
   .enablePlugins(NoPublishPlugin)

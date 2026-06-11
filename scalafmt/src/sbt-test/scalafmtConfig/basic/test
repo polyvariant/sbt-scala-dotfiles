@@ -1,0 +1,28 @@
+# generate the .scalafmt.conf for both projects
+> scalafmtConfiguredGenerate
+> defaults/scalafmtConfiguredGenerate
+
+# file exists with the expected name
+> checkFileExists
+
+# banner header present; version and configured settings rendered
+> checkContents
+
+# sbt-scalafmt's scalafmtConfig is wired to the generated file
+> checkScalafmtWired
+
+# a project that overrides nothing renders the default version
+> checkDefaultsVersion
+
+# freshly generated file passes the up-to-date check
+> scalafmtConfiguredCheck
+
+# tamper with the generated config...
+> mutateConfig
+
+# ...and the check must fail
+-> scalafmtConfiguredCheck
+
+# regenerating brings everything back up to date
+> scalafmtConfiguredGenerate
+> scalafmtConfiguredCheck

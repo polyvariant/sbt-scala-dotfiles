@@ -23,11 +23,19 @@ pull_request_rules:
       add:
       - core
       remove: []
-- name: Label sbtPlugin PRs
+- name: Label scalafix PRs
   conditions:
-  - files~=^sbtPlugin/
+  - files~=^scalafix/
   actions:
     label:
       add:
-      - sbtPlugin
+      - scalafix
+      remove: []
+- name: Label scalafmt PRs
+  conditions:
+  - files~=^scalafmt/
+  actions:
+    label:
+      add:
+      - scalafmt
       remove: []
