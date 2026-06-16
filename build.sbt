@@ -57,7 +57,7 @@ lazy val filesPlugin = project
     libraryDependencies ++= Seq(
       "org.scalameta" %% "munit" % "1.3.2" % Test
     ),
-    pluginCrossBuild / sbtVersion := "1.9.8",
+    pluginCrossBuild / sbtVersion := "1.9.9",
     scriptedLaunchOpts :=
       scriptedLaunchOpts.value ++
         Seq("-Xmx1024M", "-Dplugin.version=" + version.value),
@@ -75,7 +75,7 @@ lazy val hoconPlugin = project
     libraryDependencies ++= Seq(
       "org.scalameta" %% "munit" % "1.3.2" % Test
     ),
-    pluginCrossBuild / sbtVersion := "1.9.8",
+    pluginCrossBuild / sbtVersion := "1.9.9",
     scriptedLaunchOpts :=
       scriptedLaunchOpts.value ++
         Seq("-Xmx1024M", "-Dplugin.version=" + version.value),
@@ -94,7 +94,7 @@ lazy val scalafixPlugin = project
       "org.scalameta" %% "munit" % "1.3.2" % Test
     ),
     addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % "0.14.6"),
-    pluginCrossBuild / sbtVersion := "1.9.8",
+    pluginCrossBuild / sbtVersion := "1.9.9",
     scriptedLaunchOpts :=
       scriptedLaunchOpts.value ++
         Seq("-Xmx1024M", "-Dplugin.version=" + version.value),
@@ -112,7 +112,7 @@ lazy val scalafmtPlugin = project
       "org.scalameta" %% "munit" % "1.3.2" % Test
     ),
     addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.5.6"),
-    pluginCrossBuild / sbtVersion := "1.9.8",
+    pluginCrossBuild / sbtVersion := "1.9.9",
     scriptedLaunchOpts :=
       scriptedLaunchOpts.value ++
         Seq("-Xmx1024M", "-Dplugin.version=" + version.value),
