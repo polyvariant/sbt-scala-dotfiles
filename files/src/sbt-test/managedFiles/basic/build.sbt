@@ -7,7 +7,7 @@ lazy val root = project
   .in(file("."))
   .enablePlugins(ManagedFilesPlugin)
   .settings(
-    scalaVersion := "2.12.21",
+    scalaVersion := "2.13.18",
     // A flat file and one in a nested directory: generate must create the directory too.
     managedFiles := Map(
       baseDirectory.value / "a.txt" -> aContent,
@@ -33,6 +33,5 @@ mutate := {
 }
 
 val deleteOne = taskKey[Unit]("Delete a managed file — a missing file must count as out of date")
-deleteOne := {
+deleteOne :=
   IO.delete(baseDirectory.value / "a.txt")
-}

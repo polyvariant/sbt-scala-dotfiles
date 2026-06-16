@@ -7,7 +7,7 @@ lazy val root = project
   .in(file("."))
   .enablePlugins(HoconFilesPlugin)
   .settings(
-    scalaVersion := "2.12.21",
+    scalaVersion := "2.13.18",
     // A representative HOCON tree: a scalar, a nested object and a list.
     hoconFiles := Map(
       baseDirectory.value / "app.conf" -> Map(
@@ -35,7 +35,10 @@ checkRendered := {
   assert(!txt.contains("generated"), s"app.conf unexpectedly has a banner:\n$txt")
 }
 
-val checkRawCoexists = taskKey[Unit]("A raw managedFiles entry is generated alongside the HOCON one")
+val checkRawCoexists = taskKey[Unit](
+  "A raw managedFiles entry is generated alongside the HOCON one"
+)
+
 checkRawCoexists := {
   val raw = IO.read(baseDirectory.value / "raw.txt")
   assert(raw == "literal\n", s"raw.txt not verbatim: $raw")
