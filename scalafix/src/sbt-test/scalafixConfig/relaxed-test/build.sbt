@@ -5,7 +5,7 @@ lazy val root = project
   .in(file("."))
   .enablePlugins(ScalafixConfigPlugin)
   .settings(
-    scalaVersion := "2.12.21",
+    scalaVersion := "2.13.18",
     // Compile: a strict rule set with a configured rule block.
     Compile / scalafixConfiguredRules := Seq("DisableSyntax", "OrganizeImports"),
     Compile / scalafixConfiguredSettings := Map(
@@ -29,7 +29,7 @@ lazy val root = project
 lazy val noRules = project
   .in(file("no-rules"))
   .enablePlugins(ScalafixConfigPlugin)
-  .settings(scalaVersion := "2.12.21")
+  .settings(scalaVersion := "2.13.18")
 
 // --- assertions, run from the `test` script ---
 
@@ -57,16 +57,31 @@ checkContents := {
 
   // Compile config has OrganizeImports (with its block); Test does not.
   assert(mainTxt.contains("OrganizeImports"), s"Compile config missing OrganizeImports:\n$mainTxt")
-  assert(mainTxt.contains("targetDialect"), s"Compile config missing OrganizeImports block:\n$mainTxt")
-  assert(!testTxt.contains("OrganizeImports"), s"Test config should be relaxed (no OrganizeImports):\n$testTxt")
+  assert(
+    mainTxt.contains("targetDialect"),
+    s"Compile config missing OrganizeImports block:\n$mainTxt",
+  )
+  assert(
+    !testTxt.contains("OrganizeImports"),
+    s"Test config should be relaxed (no OrganizeImports):\n$testTxt",
+  )
 
   // Test inherited the rest from Compile: DisableSyntax and its noFinalize settings block
   // survive even though OrganizeImports was dropped.
-  assert(testTxt.contains("DisableSyntax"), s"Test config missing inherited DisableSyntax:\n$testTxt")
-  assert(testTxt.contains("noFinalize"), s"Test config missing inherited DisableSyntax block:\n$testTxt")
+  assert(
+    testTxt.contains("DisableSyntax"),
+    s"Test config missing inherited DisableSyntax:\n$testTxt",
+  )
+  assert(
+    testTxt.contains("noFinalize"),
+    s"Test config missing inherited DisableSyntax block:\n$testTxt",
+  )
 }
 
-val checkScalafixWired = taskKey[Unit]("sbt-scalafix's scalafixConfig points at our generated files per config")
+val checkScalafixWired = taskKey[Unit](
+  "sbt-scalafix's scalafixConfig points at our generated files per config"
+)
+
 checkScalafixWired := {
   val main = (Compile / scalafixConfig).value
   val test = (Test / scalafixConfig).value
@@ -89,13 +104,19 @@ checkNoRulesNotWired := {
   assert(test.isEmpty, s"noRules Test / scalafixConfig should be None, was: $test")
 }
 
-val mutateMainConfig = taskKey[Unit]("Corrupt the generated Compile config to force a staleness failure")
+val mutateMainConfig = taskKey[Unit](
+  "Corrupt the generated Compile config to force a staleness failure"
+)
+
 mutateMainConfig := {
   val f = (Compile / scalafixConfiguredFile).value
   IO.write(f, IO.read(f) + "\n# tampered\n")
 }
 
-val mutateTestConfig = taskKey[Unit]("Corrupt the generated Test config to force a staleness failure")
+val mutateTestConfig = taskKey[Unit](
+  "Corrupt the generated Test config to force a staleness failure"
+)
+
 mutateTestConfig := {
   val f = (Test / scalafixConfiguredFile).value
   IO.write(f, IO.read(f) + "\n# tampered\n")
