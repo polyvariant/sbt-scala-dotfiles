@@ -12,7 +12,7 @@ ThisBuild / githubWorkflowPublishTargetBranches := Seq(
 
 ThisBuild / githubWorkflowJavaVersions := Seq(JavaSpec.temurin("17"))
 
-val scala212 = "2.12.21"
+val scala212 = "2.13.18"
 
 // The whole build targets sbt 1.x / Scala 2.12 only. This is an sbt plugin and sbt-scalafix
 // (which it builds on) ships no Scala 3 / sbt 2.0 artifact, so the plugin can only be 2.12.
@@ -42,8 +42,8 @@ lazy val core = project
   .settings(
     name := "scala-dotfiles-core",
     libraryDependencies ++= Seq(
-      "com.typesafe" % "config" % "1.4.3",
-      "org.scalameta" %% "munit" % "1.3.2" % Test,
+      "com.typesafe" % "config" % "1.4.9",
+      "org.scalameta" %% "munit" % "1.3.3" % Test,
     ),
     mimaPreviousArtifacts := Set.empty,
   )
@@ -55,9 +55,9 @@ lazy val filesPlugin = project
   .settings(
     name := "sbt-scala-dotfiles-files",
     libraryDependencies ++= Seq(
-      "org.scalameta" %% "munit" % "1.3.2" % Test
+      "org.scalameta" %% "munit" % "1.3.3" % Test
     ),
-    pluginCrossBuild / sbtVersion := "1.9.8",
+    pluginCrossBuild / sbtVersion := "1.9.9",
     scriptedLaunchOpts :=
       scriptedLaunchOpts.value ++
         Seq("-Xmx1024M", "-Dplugin.version=" + version.value),
@@ -73,9 +73,9 @@ lazy val hoconPlugin = project
   .settings(
     name := "sbt-scala-dotfiles-hocon",
     libraryDependencies ++= Seq(
-      "org.scalameta" %% "munit" % "1.3.2" % Test
+      "org.scalameta" %% "munit" % "1.3.3" % Test
     ),
-    pluginCrossBuild / sbtVersion := "1.9.8",
+    pluginCrossBuild / sbtVersion := "1.9.9",
     scriptedLaunchOpts :=
       scriptedLaunchOpts.value ++
         Seq("-Xmx1024M", "-Dplugin.version=" + version.value),
@@ -91,10 +91,10 @@ lazy val scalafixPlugin = project
   .settings(
     name := "sbt-scala-dotfiles-scalafix",
     libraryDependencies ++= Seq(
-      "org.scalameta" %% "munit" % "1.3.2" % Test
+      "org.scalameta" %% "munit" % "1.3.3" % Test
     ),
     addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % "0.14.7"),
-    pluginCrossBuild / sbtVersion := "1.9.8",
+    pluginCrossBuild / sbtVersion := "1.9.9",
     scriptedLaunchOpts :=
       scriptedLaunchOpts.value ++
         Seq("-Xmx1024M", "-Dplugin.version=" + version.value),
@@ -109,10 +109,10 @@ lazy val scalafmtPlugin = project
   .settings(
     name := "sbt-scala-dotfiles-scalafmt",
     libraryDependencies ++= Seq(
-      "org.scalameta" %% "munit" % "1.3.2" % Test
+      "org.scalameta" %% "munit" % "1.3.3" % Test
     ),
-    addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.5.6"),
-    pluginCrossBuild / sbtVersion := "1.9.8",
+    addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.6.1"),
+    pluginCrossBuild / sbtVersion := "1.9.9",
     scriptedLaunchOpts :=
       scriptedLaunchOpts.value ++
         Seq("-Xmx1024M", "-Dplugin.version=" + version.value),
