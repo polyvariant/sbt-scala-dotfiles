@@ -5,7 +5,7 @@ lazy val root = project
   .in(file("."))
   .enablePlugins(ScalafmtConfigPlugin)
   .settings(
-    scalaVersion := "2.12.21",
+    scalaVersion := "2.13.18",
     // Override the default version, and declare a few representative settings: a scalar, a
     // dotted/nested object and a list of rule names.
     scalafmtConfiguredVersion := "3.11.1",
@@ -22,7 +22,7 @@ lazy val defaults = project
   .in(file("defaults"))
   .enablePlugins(ScalafmtConfigPlugin)
   .settings(
-    scalaVersion := "2.12.21",
+    scalaVersion := "2.13.18",
     // own file so it doesn't clobber the root project's .scalafmt.conf (both default to the
     // build's base directory).
     scalafmtConfiguredFile := baseDirectory.value / ".scalafmt.conf",
