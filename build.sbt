@@ -43,7 +43,7 @@ lazy val core = project
     name := "scala-dotfiles-core",
     libraryDependencies ++= Seq(
       "com.typesafe" % "config" % "1.4.9",
-      "org.scalameta" %% "munit" % "1.3.3" % Test,
+      "org.scalameta" %% "munit" % "1.3.4" % Test,
     ),
     mimaPreviousArtifacts := Set.empty,
   )
@@ -55,7 +55,7 @@ lazy val filesPlugin = project
   .settings(
     name := "sbt-scala-dotfiles-files",
     libraryDependencies ++= Seq(
-      "org.scalameta" %% "munit" % "1.3.3" % Test
+      "org.scalameta" %% "munit" % "1.3.4" % Test
     ),
     pluginCrossBuild / sbtVersion := "1.9.9",
     scriptedLaunchOpts :=
@@ -73,7 +73,7 @@ lazy val hoconPlugin = project
   .settings(
     name := "sbt-scala-dotfiles-hocon",
     libraryDependencies ++= Seq(
-      "org.scalameta" %% "munit" % "1.3.3" % Test
+      "org.scalameta" %% "munit" % "1.3.4" % Test
     ),
     pluginCrossBuild / sbtVersion := "1.9.9",
     scriptedLaunchOpts :=
@@ -91,7 +91,7 @@ lazy val scalafixPlugin = project
   .settings(
     name := "sbt-scala-dotfiles-scalafix",
     libraryDependencies ++= Seq(
-      "org.scalameta" %% "munit" % "1.3.3" % Test
+      "org.scalameta" %% "munit" % "1.3.4" % Test
     ),
     addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % "0.14.7"),
     pluginCrossBuild / sbtVersion := "1.9.9",
@@ -109,7 +109,7 @@ lazy val scalafmtPlugin = project
   .settings(
     name := "sbt-scala-dotfiles-scalafmt",
     libraryDependencies ++= Seq(
-      "org.scalameta" %% "munit" % "1.3.3" % Test
+      "org.scalameta" %% "munit" % "1.3.4" % Test
     ),
     addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.6.1"),
     pluginCrossBuild / sbtVersion := "1.9.9",
