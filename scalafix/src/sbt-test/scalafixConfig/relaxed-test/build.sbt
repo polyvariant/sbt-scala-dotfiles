@@ -5,7 +5,7 @@ lazy val root = project
   .in(file("."))
   .enablePlugins(ScalafixConfigPlugin)
   .settings(
-    scalaVersion := "2.13.18",
+    scalaVersion := "3.9.0",
     // Compile: a strict rule set with a configured rule block.
     Compile / scalafixConfiguredRules := Seq("DisableSyntax", "OrganizeImports"),
     Compile / scalafixConfiguredSettings := Map(
@@ -29,7 +29,7 @@ lazy val root = project
 lazy val noRules = project
   .in(file("no-rules"))
   .enablePlugins(ScalafixConfigPlugin)
-  .settings(scalaVersion := "2.13.18")
+  .settings(scalaVersion := "3.9.0")
 
 // --- assertions, run from the `test` script ---
 

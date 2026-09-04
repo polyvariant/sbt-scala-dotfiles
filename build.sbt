@@ -12,7 +12,7 @@ ThisBuild / githubWorkflowPublishTargetBranches := Seq(
 
 ThisBuild / githubWorkflowJavaVersions := Seq(JavaSpec.temurin("17"))
 
-val scala212 = "2.13.18"
+val scala212 = "3.9.0"
 
 // The whole build targets sbt 1.x / Scala 2.12 only. This is an sbt plugin and sbt-scalafix
 // (which it builds on) ships no Scala 3 / sbt 2.0 artifact, so the plugin can only be 2.12.

@@ -7,7 +7,7 @@ lazy val root = project
   .in(file("."))
   .enablePlugins(ManagedFilesPlugin)
   .settings(
-    scalaVersion := "2.13.18",
+    scalaVersion := "3.9.0",
     // A flat file and one in a nested directory: generate must create the directory too.
     managedFiles := Map(
       baseDirectory.value / "a.txt" -> aContent,
