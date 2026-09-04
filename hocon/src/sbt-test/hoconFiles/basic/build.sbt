@@ -7,7 +7,7 @@ lazy val root = project
   .in(file("."))
   .enablePlugins(HoconFilesPlugin)
   .settings(
-    scalaVersion := "2.13.18",
+    scalaVersion := "3.9.0",
     // A representative HOCON tree: a scalar, a nested object and a list.
     hoconFiles := Map(
       baseDirectory.value / "app.conf" -> Map(
