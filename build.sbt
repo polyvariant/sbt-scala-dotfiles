@@ -111,7 +111,7 @@ lazy val scalafmtPlugin = project
     libraryDependencies ++= Seq(
       "org.scalameta" %% "munit" % "1.3.5" % Test
     ),
-    addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.6.1"),
+    addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.6.2"),
     pluginCrossBuild / sbtVersion := "1.9.9",
     scriptedLaunchOpts :=
       scriptedLaunchOpts.value ++
