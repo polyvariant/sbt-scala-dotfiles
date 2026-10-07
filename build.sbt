@@ -12,7 +12,7 @@ ThisBuild / githubWorkflowPublishTargetBranches := Seq(
 
 ThisBuild / githubWorkflowJavaVersions := Seq(JavaSpec.temurin("17"))
 
-val scala212 = "2.13.18"
+val scala212 = "2.12.21"
 
 // The whole build targets sbt 1.x / Scala 2.12 only. This is an sbt plugin and sbt-scalafix
 // (which it builds on) ships no Scala 3 / sbt 2.0 artifact, so the plugin can only be 2.12.
@@ -93,7 +93,7 @@ lazy val scalafixPlugin = project
     libraryDependencies ++= Seq(
       "org.scalameta" %% "munit" % "1.3.6" % Test
     ),
-    addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % "0.14.7"),
+    addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % "0.14.9"),
     pluginCrossBuild / sbtVersion := "1.9.9",
     scriptedLaunchOpts :=
       scriptedLaunchOpts.value ++
@@ -111,7 +111,7 @@ lazy val scalafmtPlugin = project
     libraryDependencies ++= Seq(
       "org.scalameta" %% "munit" % "1.3.6" % Test
     ),
-    addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.6.1"),
+    addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.6.2"),
     pluginCrossBuild / sbtVersion := "1.9.9",
     scriptedLaunchOpts :=
       scriptedLaunchOpts.value ++
