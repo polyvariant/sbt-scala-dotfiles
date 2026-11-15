@@ -42,7 +42,7 @@ lazy val core = project
   .settings(
     name := "scala-dotfiles-core",
     libraryDependencies ++= Seq(
-      "com.typesafe" % "config" % "1.4.9",
+      "com.typesafe" % "config" % "1.4.10",
       "org.scalameta" %% "munit" % "1.3.6" % Test,
     ),
     mimaPreviousArtifacts := Set.empty,
