@@ -93,7 +93,7 @@ lazy val scalafixPlugin = project
     libraryDependencies ++= Seq(
       "org.scalameta" %% "munit" % "1.3.6" % Test
     ),
-    addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % "0.14.9"),
+    addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % "0.14.10"),
     pluginCrossBuild / sbtVersion := "1.9.9",
     scriptedLaunchOpts :=
       scriptedLaunchOpts.value ++
